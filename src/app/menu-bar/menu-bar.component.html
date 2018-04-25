@@ -1,0 +1,3 @@
+<ul class="menu-content">
+  <li *ngFor="let m of menuOptions" class="fade-in-effect" [class]="getClass(m)" [class.menu-hidden]="m?.visible === false" (click)="onMenuClick(m)"><label>{{m?.description}}</label></li>
+</ul>
