@@ -5,4 +5,5 @@ export class MenuModel {
     title = false;
     navigate = false;
     subMenu: Array<MenuModel>;
+    click = false;
 }

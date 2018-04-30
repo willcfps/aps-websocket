@@ -6,12 +6,16 @@ import { StompService } from '../external/component/stomp.service';
 
 import { AppComponent } from './app.component';
 import { MenuBarComponent } from './menu-bar/menu-bar.component';
+import { LeftBarComponent } from './left-bar/left-bar.component';
+import { ChatComponent } from './chat/chat.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    MenuBarComponent
+    MenuBarComponent,
+    LeftBarComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

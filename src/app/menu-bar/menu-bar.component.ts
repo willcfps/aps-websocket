@@ -57,7 +57,10 @@ export class MenuBarComponent implements OnInit {
   getClass(menu: MenuModel) {
     let c = 'fade-in-effect';
     if (menu.title) {
-      return c + ', menu-title';
+      c = c + ' menu-title';
+      c = c + (menu.click ? ' menu-click' : '');
+
+      return c;
     }
 
     return c;
@@ -72,6 +75,7 @@ export class MenuBarComponent implements OnInit {
       return;
     }
 
+    m.click = !m.click;
     this.menuOptions_.forEach(aux => {
       let ok = false;
 

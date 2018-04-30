@@ -15,7 +15,6 @@ export class AppComponent {
   private subscription: any;
 
   constructor(private stomp: StompService) {
-
     this.init();
   }
 

@@ -3,20 +3,21 @@ ul {
     margin: 0;
     padding: 0;
     width: 230px;
-    background-color: #f1f1f1;
+    background-color: #404a4e;
+    color: white;
 }
 
 li label {
     cursor: pointer;
     display: block;
-    color: #000;
+    color: #fff;
     padding: 8px 16px;
     text-decoration: none;
 }
 
 li label:hover {
-    background-color: #555;
-    color: white;
+    background-color: #404a4e;
+    color: white !important;
 }
 
 .active {
@@ -24,19 +25,20 @@ li label:hover {
     color: white;
 }
 
-.menu-content {
-    border: 1px solid #555;
+.menu-click {
+    background-color: #404a4e !important;
 }
 
 .menu-title {
-    background-color: #555 !important;
-    color: white !important;
+    border-top: 1px solid #555;
+    background-color: #313b3f !important;
+    font-weight: bold;
 }
 
 .menu-title label {
     padding-left: 20px !important;
     cursor: default !important;
-    color: white !important;
+    color: #9ba5ac !important;
 }
 
 .menu-hidden {

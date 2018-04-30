@@ -1,0 +1,10 @@
+.lef-bar-content {
+    height: calc(100vh);
+    background-color: #313b3f;
+    width: 230px;
+}
+
+.logo {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
