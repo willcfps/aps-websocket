@@ -1,0 +1,10 @@
+.app-container-left {
+    height: calc(100vh);
+    float: left;
+}
+
+.app-container-right {
+    height: calc(100vh);
+    float: right;
+    width: calc(100% - 230px);
+}

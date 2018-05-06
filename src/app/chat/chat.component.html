@@ -1,3 +1,47 @@
-<p>
-  chat works!
-</p>
+<div class="chat-container">
+  <div #messagespanel class="messages-container">
+    <ng-container *ngFor="let m of messages">
+      <div id="{{m.id}}" class="message-container" [class.user-message]="m.from === user">
+        <div class="message-header">
+          <span style="display: inline-block;">{{m.dateTime}} - {{m.name}}</span>
+          <div class="message-dropdown" style="float:right;">
+            <div class="message-dropbtn">...</div>
+            <div class="message-dropdown-content">
+              <a (click)="onResponseMessageClick(m)" href="#">Responder</a>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="m.response" style="padding: 10px;" class="message-responded">
+          <span (click)="onFindMessageResponseClick(m.response)" style="font-weight: bold; font-size: 20px;cursor: pointer;" class="glyphicon glyphicon-search"></span>
+          <div style="margin-left: 15px;background-color: #e6e6e6; width: 96%;float: right;">{{m.response.message}}</div>
+        </div>
+        <div class="message">{{m.message}}</div>
+        <div class="message-footer" [class.message-visualized]="m.visualized">
+          <span class="glyphicon glyphicon-ok"></span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div #sendcontainer class="send-content">
+
+    <div *ngIf="message.response" class="message-response" style="padding: 10px">
+      <span style="font-weight: bold; font-size: 20px" class="glyphicon glyphicon-pushpin"></span>
+      <span style="margin-left: 15px;">{{message.response.message}}</span>
+      <span (click)="onResponseCancelClick()" style="float: right;cursor: pointer;" class="glyphicon glyphicon-remove"></span>
+    </div>
+
+    <div class="input-group">
+      <input (keypress)="onEnterPress($event)" [(ngModel)]="message.message" type="text" class="form-control" placeholder="Mensagem">
+      <div class="input-group-btn">
+        <button (click)="onBtnSendClick()" class="btn btn-default" type="submit">
+          Enviar
+        </button>
+      </div>
+    </div>
+    <div class="message-btn-scroll checkbox">
+      <label>
+        <input type="checkbox" (click)="onDisableScrollClick()" [checked]="automaticScroller">Rolar página automaticamente</label>
+    </div>
+  </div>
+</div>

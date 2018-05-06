@@ -1,12 +1,12 @@
-export enum DefaultMessageType {
-    NEW, ACK
-}
 
 export class DefaultMessageModel {
     id: string;
-    type: DefaultMessageType;
     message: string;
-    ack: boolean;
-
+    dateTime: string;
     from: string;
+    name: string;
+    send = true;
+    visualized = false;
+    position: number;
+    response: DefaultMessageModel;
 }
