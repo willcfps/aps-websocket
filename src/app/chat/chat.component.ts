@@ -1,9 +1,9 @@
-import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy, Input } from '@angular/core';
 import { StompService } from '../../external/component/stomp.service';
 import { DefaultMessageModel } from '../model/message/default.message.model';
 import { RegisteredMessage } from '../model/message/registered.message';
 import { VisualizedMessage } from '../model/message/visualized.message';
-import { setInterval } from 'timers';
+import { GlobalsVar } from '../globals/globals';
 
 @Component({
   selector: 'app-chat',
@@ -18,55 +18,98 @@ export class ChatComponent implements OnInit, OnDestroy {
   private scrollerInterval: any;
   private automaticScroller = true;
 
-  private name = 'William';
-  private user = 'x1919';
-  private discution = 'novo-topico';
-
   private topicSubscription: any;
   private confirmationSubscription: any;
   private registerSubscription: any;
 
   private participants = new Array<string>();
   private confirmations = new Map();
+  private projectId_;
 
   messages = new Array<DefaultMessageModel>();
   message: DefaultMessageModel;
+  user: string;
 
-  position: DefaultMessageModel;
+  @Input() set projectId(id: string) {
+    this.projectId_ = id;
+    this.messages = new Array<DefaultMessageModel>();
 
-  constructor(private stomp: StompService) {
+    clearInterval(this.scrollerInterval);
 
+    this.unsubscribe();
+    this.init();
+  }
+
+  constructor(private stomp: StompService, private globals: GlobalsVar) {
+    this.user = this.globals.user.id.toString();
+  }
+
+  private init() {
+    this.connect();
+    this.subscriber();
+
+    this.scrollerInterval = setInterval(() => {
+      if (this.automaticScroller) {
+        this.panel.nativeElement.scrollTop = this.panel.nativeElement.scrollHeight;
+      }
+    }, 500);
+  }
+
+  private generateHeader() {
+    let header: any = new Object();
+    header.authorization = this.globals.session;
+
+    return header;
   }
 
   private disconnect() {
+    if (!this.stomp || this.stomp.disconnect) {
+      return;
+    }
     this.stomp.disconnect().then(() => {
       console.log('Connection closed');
     });
   }
 
   private unsubscribe() {
-    this.confirmationSubscription.unsubscribe();
-    this.registerSubscription.unsubscribe();
-    this.topicSubscription.unsubscribe();
+    if (this.confirmationSubscription) {
+      this.confirmationSubscription.unsubscribe();
+    }
+
+    if (this.registerSubscription) {
+      this.registerSubscription.unsubscribe();
+    }
+
+    if (this.topicSubscription) {
+      this.topicSubscription.unsubscribe();
+    }
   }
 
   private subscriber() {
     this.stomp.startConnect().then(() => {
 
-      this.confirmationSubscription = this.stomp.subscribe('/confirmation/' + this.user, this.onConfirmationEvent.bind(this));
-      this.registerSubscription = this.stomp.subscribe('/registered/' + this.discution, this.onRegisteredEvent.bind(this));
-      this.topicSubscription = this.stomp.subscribe('/topic/' + this.discution, this.accept.bind(this));
+      this.confirmationSubscription = this.stomp.subscribe('/confirmation/' + this.projectId_ + '/' + this.globals.user.id.toString(),
+        this.onConfirmationEvent.bind(this),
+        this.generateHeader());
+
+      this.registerSubscription = this.stomp.subscribe('/registered/' + this.projectId_,
+        this.onRegisteredEvent.bind(this),
+        this.generateHeader());
+
+      this.topicSubscription = this.stomp.subscribe('/topic/' + this.projectId_,
+        this.accept.bind(this),
+        this.generateHeader());
 
       this.sendRegistration();
-
       this.stomp.done('topic');
     });
   }
 
   private connect() {
     this.stomp.configure({
-      host: 'http://localhost:8080/aps-websocket',
-      debug: false,
+      host: 'http://192.168.0.102:8080/api/aps-websocket',
+      headers: this.generateHeader(),
+      debug: true,
       queue: { 'topic': false }
     });
   }
@@ -74,16 +117,16 @@ export class ChatComponent implements OnInit, OnDestroy {
   private sendConfirmation(data: DefaultMessageModel) {
     let aux = new VisualizedMessage();
     aux.messageId = data.id;
-    aux.user = this.user;
+    aux.user = this.globals.user.id.toString();
 
-    this.stomp.send('/app/confirm/' + data.from, aux);
+    this.stomp.send('/app/confirm/' + this.projectId_ + '/' + data.from, aux, this.generateHeader());
   }
 
   private sendRegistration() {
     let aux = new RegisteredMessage();
-    aux.user = this.user;
+    aux.user = this.globals.user.username;
 
-    this.stomp.send('/app/register/' + this.discution, aux);
+    this.stomp.send('/app/register/' + this.projectId_, aux, this.generateHeader());
   }
 
   public accept(data: DefaultMessageModel) {
@@ -91,15 +134,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     data.position = this.panel.nativeElement.scrollHeight - 5;
     this.messages.push(data);
 
-    // if (data.from !== this.user) {
+    if (data.from !== this.globals.user.id.toString()) {
     this.sendConfirmation(data);
-    // }
-
-    if (this.messages.length === 10) {
-      console.log('voltar aq: ', data);
-      this.position = data;
     }
-
   }
 
   private onConfirmationEvent(message: VisualizedMessage) {
@@ -113,7 +150,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   private onRegisteredEvent(message: RegisteredMessage) {
-    if (message.user === this.user) {
+    if (message.user === this.globals.user.username) {
       return;
     }
 
@@ -129,30 +166,24 @@ export class ChatComponent implements OnInit, OnDestroy {
   private newMessage() {
     this.message = new DefaultMessageModel();
     this.message.id = new Date().getTime().toString();
-    this.message.from = this.user;
-    this.message.name = this.name;
+    this.message.from = this.globals.user.id.toString();
+    this.message.name = this.globals.user.username;
   }
 
   private send(body: DefaultMessageModel) {
     let date = new Date();
     body.dateTime = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-    this.stomp.send('/app/' + this.discution, body);
+    this.stomp.send('/app/' + this.projectId_, body, this.generateHeader());
   }
 
   ngOnDestroy() {
     clearInterval(this.scrollerInterval);
+    this.unsubscribe();
+    this.disconnect();
   }
 
   ngOnInit() {
-    this.connect();
-    this.subscriber();
     this.newMessage();
-
-    this.scrollerInterval = setInterval(() => {
-      if (this.automaticScroller) {
-        this.panel.nativeElement.scrollTop = this.panel.nativeElement.scrollHeight;
-      }
-    }, 500);
   }
 
   onDisableScrollClick() {

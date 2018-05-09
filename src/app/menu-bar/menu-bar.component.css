@@ -8,11 +8,11 @@ ul {
 }
 
 li label {
-    cursor: pointer;
     display: block;
     color: #fff;
     padding: 8px 16px;
     text-decoration: none;
+    font-weight: normal;
 }
 
 li label:hover {
@@ -32,15 +32,18 @@ li label:hover {
 .menu-title {
     border-top: 1px solid #555;
     background-color: #313b3f !important;
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 .menu-title label {
     padding-left: 20px !important;
-    cursor: default !important;
     color: #9ba5ac !important;
 }
 
 .menu-hidden {
     display: none;
+}
+
+.clickable {
+    cursor: pointer !important;
 }

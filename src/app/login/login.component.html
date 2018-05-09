@@ -1,0 +1,22 @@
+<img src="/assets/login-back.jpg" id="bg" alt="">
+<div class="padding-login login-back" autocomplete="off">
+  <div class="login-container">
+    <div class="login-header">
+      <span>
+        <label>Bem vindo!</label>
+      </span>
+    </div>
+    <div class="login-body">
+      <div id="divKey">
+        <input type="text" id="login-home-page" [(ngModel)]="user.username" placeholder="Login" class="form-control">
+        <div>
+          <input type="password" id="passwd-home-page" [(ngModel)]="user.password" placeholder="Senha" class="form-control">
+        </div>
+
+        <div id="btn-enter-login" class="login-btn btn-success" (click)="onLoginClick()">
+          <b>ENTRAR</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

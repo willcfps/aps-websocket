@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MenuModel } from '../model';
+import { GlobalsVar } from '../globals/globals';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu-bar',
@@ -8,7 +10,7 @@ import { MenuModel } from '../model';
 })
 export class MenuBarComponent implements OnInit {
 
-  menuOptions_: Array<MenuModel>;
+  menuOptions_ = new Array<MenuModel>();
 
   get menuOptions() {
     let aux = new Array<MenuModel>();
@@ -24,41 +26,66 @@ export class MenuBarComponent implements OnInit {
     return aux;
   }
 
-  constructor() {
+  constructor(private globals: GlobalsVar, private route: Router) {
 
   }
 
+  private navigate(m: MenuModel) {
+    if (m.linkParam) {
+      this.route.navigate([m.link], { queryParams: { id: m.linkParam } });
+      return;
+    }
+
+    this.route.navigate([m.link]);
+  }
+
   ngOnInit() {
-    let a1 = new MenuModel();
-    a1.description = 'Home';
-    a1.title = true;
-    a1.subMenu = new Array<MenuModel>();
+    let novoProjeto = new MenuModel();
+    novoProjeto.description = 'Novo projeto';
+    novoProjeto.clickable = true;
+    novoProjeto.link = '/newproject';
+    novoProjeto.icon = 'glyphicon glyphicon-plus';
+    novoProjeto.title = true;
+    this.menuOptions_.push(novoProjeto);
 
-    let a11 = new MenuModel();
-    a11.description = 'Home teste';
-    a11.visible = false;
-    a1.subMenu.push(a11);
+    if (this.globals.projects) {
+      let projeto = new MenuModel();
+      projeto.description = 'Meus projetos';
+      projeto.title = true;
+      projeto.icon = 'glyphicon glyphicon-star';
+      projeto.subMenu = new Array<MenuModel>();
 
-    let a2 = new MenuModel();
-    a2.title = true;
-    a2.description = 'Teste';
-    a2.subMenu = new Array<MenuModel>();
+      for (let p of this.globals.projects) {
+        let pr = new MenuModel();
+        pr.description = p.projectName;
+        pr.visible = false;
+        pr.clickable = true;
+        pr.link = '/project';
+        pr.linkParam = p.projectId.toString();
 
-    a11 = new MenuModel();
-    a11.visible = false;
-    a11.description = 'Teste teste';
-    a2.subMenu.push(a11);
+        projeto.subMenu.push(pr);
+      }
 
-    this.menuOptions_ = new Array<MenuModel>();
-    this.menuOptions_.push(a1);
-    this.menuOptions_.push(a2);
+      this.menuOptions_.push(projeto);
+    }
+
+
+    if (this.globals.user.profile.weight > 3) {
+      let user = new MenuModel();
+      user.description = 'Usuários';
+      user.title = true;
+      user.clickable = true;
+      user.link = '/users';
+      user.icon = 'glyphicon glyphicon-user';
+
+      this.menuOptions_.push(user);
+    }
   }
 
   getClass(menu: MenuModel) {
     let c = 'fade-in-effect';
     if (menu.title) {
       c = c + ' menu-title';
-      c = c + (menu.click ? ' menu-click' : '');
 
       return c;
     }
@@ -67,11 +94,8 @@ export class MenuBarComponent implements OnInit {
   }
 
   onMenuClick(m: MenuModel) {
-    if (m.link) {
-      return;
-    }
-
-    if (m.navigate) {
+    if (m.clickable) {
+      this.navigate(m);
       return;
     }
 

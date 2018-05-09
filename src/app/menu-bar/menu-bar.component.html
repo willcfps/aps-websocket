@@ -1,7 +1,7 @@
 <ul class="menu-content">
-  <li *ngFor="let m of menuOptions" class="fade-in-effect" [class]="getClass(m)" [class.menu-hidden]="m?.visible === false"
+  <li *ngFor="let m of menuOptions" class="fade-in-effect" [class]="getClass(m)" [class.menu-hidden]="m?.visible === false" [class.clickable]="m?.clickable"
     (click)="onMenuClick(m)">
     <label>
-      <span *ngIf="m?.title" class="glyphicon glyphicon-envelope" style="margin-right: 5px"></span>{{m?.description}}</label>
+      <span *ngIf="m?.title" class="{{m?.icon}}" style="margin-right: 5px"></span>{{m?.description}}</label>
   </li>
 </ul>

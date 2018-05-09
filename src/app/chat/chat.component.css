@@ -10,7 +10,9 @@
 }
 
 .messages-container {
-    height: calc(100vh - 139px);
+    --heightA: calc(100vh - 100px);
+    --heightB: calc(var(--heightA) - 139px);
+    height: var(--heightB);
     overflow-y: auto;
 }
 
@@ -25,10 +27,6 @@
     padding: 10px;
     width: calc(100% - 230px);
 }
-
-/* .send-content input {
-    width: 90%;
-} */
 
 .message-footer {
     text-align: right;
