@@ -3,11 +3,12 @@ import { Http, Response, RequestOptions, Headers, BaseRequestOptions } from '@an
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { GlobalsVar } from '../globals/globals';
 
 @Injectable()
 export class RESTService extends BaseRequestOptions {
 
-    private apiUrl = 'http://192.168.0.102:8080/api';
+    private apiUrl: string;
 
     public static handleError(error: any) {
         console.log(' ->Exception: RESTService: handleError: ', error);
@@ -22,8 +23,9 @@ export class RESTService extends BaseRequestOptions {
         return aux;
     }
 
-    constructor(protected http: Http) {
+    constructor(protected http: Http, private globals: GlobalsVar) {
         super();
+        this.apiUrl = this.globals.apiUrl;
     }
 
     get(resource: string, options: RequestOptions): Observable<Response> {

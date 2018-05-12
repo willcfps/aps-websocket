@@ -1,8 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-.app-container-left {
-    height: calc(100vh);
-    float: left;
-}
 
 .app-container-right {
     height: calc(100vh);
@@ -10,24 +6,18 @@
     width: calc(100% - 230px);
 }
 
-@media only screen and (max-width: 480px){
-    .app-container-left {
-       width: 100%;
-       height: 30px;
-    }
-    
-    .app-container-right {
-        height: calc(100vh - 30px);
-        width: 100%;
-    }
-}
-
-label {
-    margin-bottom: 0px !important;
-}
-
 .fade-in-effect {
     -webkit-animation: fadeEffect 1s;
+}
+
+@media screen and (max-height: 450px) {
+    .app-container-right {
+        width: 100% !important;
+    }
+
+    .send-content {
+        width: 100% !important;
+    }
 }
 
 @-webkit-keyframes fadeEffect {
@@ -47,3 +37,4 @@ label {
         opacity: 1;
     }
 }
+

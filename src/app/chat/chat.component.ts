@@ -15,6 +15,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('messagespanel') public panel: ElementRef;
   @ViewChild('sendcontainer') public sendContainer: ElementRef;
 
+  private apiUrl: string;
   private scrollerInterval: any;
   private automaticScroller = true;
 
@@ -42,6 +43,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   constructor(private stomp: StompService, private globals: GlobalsVar) {
     this.user = this.globals.user.id.toString();
+    this.apiUrl = this.globals.apiUrl;
   }
 
   private init() {
@@ -107,7 +109,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private connect() {
     this.stomp.configure({
-      host: 'http://192.168.0.102:8080/api/aps-websocket',
+      host: this.apiUrl + '/aps-websocket',
       headers: this.generateHeader(),
       debug: true,
       queue: { 'topic': false }

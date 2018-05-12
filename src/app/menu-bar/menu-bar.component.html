@@ -1,7 +1,15 @@
-<ul class="menu-content">
-  <li *ngFor="let m of menuOptions" class="fade-in-effect" [class]="getClass(m)" [class.menu-hidden]="m?.visible === false" [class.clickable]="m?.clickable"
-    (click)="onMenuClick(m)">
+<span class="show-menu" style="font-size:30px;cursor:pointer;color: white" (click)="showMenu()">&#9776;</span>
+<div #sidenav class="sidenav">
+
+  <a class="closebtn">&times;</a>
+ 
+  <div style="text-align: center">
+    <img class="logo" src='/assets/logo.png' style="width: 100px; height: 100px;" />
+  </div>
+
+  <a *ngFor="let m of menuOptions" class="fade-in-effect" [class]="getClass(m)" [class.menu-hidden]="m?.visible === false"
+    [class.clickable]="m?.clickable" (click)="onMenuClick(m)">
     <label>
-      <span *ngIf="m?.title" class="{{m?.icon}}" style="margin-right: 5px"></span>{{m?.description}}</label>
-  </li>
-</ul>
+      <span *ngIf="m?.title" class="{{m?.icon}} icon" style="margin-right: 5px"></span>{{m?.description}}</label>
+  </a>
+</div>

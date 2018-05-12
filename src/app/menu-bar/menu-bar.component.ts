@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { MenuModel } from '../model';
 import { GlobalsVar } from '../globals/globals';
 import { Router } from '@angular/router';
@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./menu-bar.component.css']
 })
 export class MenuBarComponent implements OnInit {
+
+  @ViewChild('sidenav') public sidenav: ElementRef;
 
   menuOptions_ = new Array<MenuModel>();
 
@@ -37,6 +39,10 @@ export class MenuBarComponent implements OnInit {
     }
 
     this.route.navigate([m.link]);
+  }
+
+  showMenu() {
+    this.sidenav.nativeElement.style.width = '100%';
   }
 
   ngOnInit() {
