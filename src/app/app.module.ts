@@ -14,11 +14,14 @@ import { GlobalsVar } from './globals/globals';
 import { AppRoutingModule } from './app-routing.module';
 import { RESTService } from './service/rest.service';
 import { LoginService } from './service/login/login.service';
-import { HttpModule } from '@angular/http';
 import { LoginComponent } from './login/login.component';
 import { ProjectComponent } from './project/project.component';
 import { UserComponent } from './user/user.component';
 import { NewprojectComponent } from './newproject/newproject.component';
+import { ProjetoService } from './service/project/project.service';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './service/http.interceptor';
+import { UsuarioService } from './service/users/user.service';
 
 
 
@@ -37,15 +40,22 @@ import { NewprojectComponent } from './newproject/newproject.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [
+    {
+      provide : HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi   : true,
+    },
     StompService,
     ToastrBehavior,
     GlobalsVar,
     { provide: RESTService, useClass: RESTService },
-    LoginService
+    LoginService,
+    ProjetoService,
+    UsuarioService
   ],
   bootstrap: [AppComponent],
   exports: [FormsModule]

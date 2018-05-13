@@ -1,7 +1,15 @@
 <div class="app-container-right">
-  <div style="height: 100px;">
-    Teste: {{projectId}}
+  <div class="project-header" style="height: 100px;">
+    <div class="project-title">
+      {{project?.title}}
+    </div>
+    <div class="project-owner">
+      Inspetor chefe: {{project?.owner?.name}}
+    </div>
+    <div class="project-description">
+      {{project?.description}}
+    </div>
   </div>
 
-  <app-chat [projectId]="projectId"></app-chat>
+  <app-chat [project]="project"></app-chat>
 </div>

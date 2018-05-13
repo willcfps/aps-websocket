@@ -1,0 +1,17 @@
+.project-header {
+    background-color: #111;
+    padding: 10px;
+    color: white;
+}
+
+.project-title {
+    font-size: 16px;
+}
+
+.project-owner {
+
+}
+
+.project-description {
+    color: #818181;
+}

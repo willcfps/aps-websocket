@@ -4,4 +4,6 @@ export class InspetorModel {
     id: number;
     name: string;
     user: UsuarioModel;
+
+    online = false;
 }

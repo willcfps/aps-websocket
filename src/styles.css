@@ -10,16 +10,6 @@
     -webkit-animation: fadeEffect 1s;
 }
 
-@media screen and (max-height: 450px) {
-    .app-container-right {
-        width: 100% !important;
-    }
-
-    .send-content {
-        width: 100% !important;
-    }
-}
-
 @-webkit-keyframes fadeEffect {
     from {
         opacity: 0;

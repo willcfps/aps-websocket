@@ -1,0 +1,10 @@
+.user-container {
+    padding: 10px;
+    height: calc(100vh);
+}
+
+.container {
+    width: calc(100% - 230px) !important;
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}

@@ -45,3 +45,12 @@
     </div>
   </div>
 </div>
+
+<div class="contact-content">
+
+  <ul style="list-style-type:none; padding: 3px !important;">
+    <ng-container *ngFor="let p of participants">
+      <li><span class="dot" [class.dot-active]="p.online"></span>  {{p.name}}</li>
+    </ng-container>
+  </ul>
+</div>

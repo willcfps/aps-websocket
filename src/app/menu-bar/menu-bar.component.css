@@ -11,7 +11,7 @@
     top: 0; /* Stay at the top */
     left: 0;
     background-color: #111; /* Black*/
-    overflow-x: scroll; /* Enable horizontal scroll */
+    overflow-y: auto; /* Enable horizontal scroll */
     padding-top: 60px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
@@ -55,11 +55,11 @@
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
+/* @media screen and (max-width: 600px) {
     .show-menu {display: inline;}
     .closebtn {display: inline;}
     .logo {display: none;}
     .sidenav {width: 0 !important;}
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
-}
+} */

@@ -4,6 +4,8 @@ import { DefaultMessageModel } from '../model/message/default.message.model';
 import { RegisteredMessage } from '../model/message/registered.message';
 import { VisualizedMessage } from '../model/message/visualized.message';
 import { GlobalsVar } from '../globals/globals';
+import { ProjetoModel } from '../model/projeto/projeto.model';
+import { InspetorModel } from '../model/inspetor/inspetor.model';
 
 @Component({
   selector: 'app-chat',
@@ -23,22 +25,39 @@ export class ChatComponent implements OnInit, OnDestroy {
   private confirmationSubscription: any;
   private registerSubscription: any;
 
-  private participants = new Array<string>();
+  private participants = new Array<InspetorModel>();
   private confirmations = new Map();
   private projectId_;
+  private project_;
 
   messages = new Array<DefaultMessageModel>();
   message: DefaultMessageModel;
   user: string;
 
-  @Input() set projectId(id: string) {
-    this.projectId_ = id;
-    this.messages = new Array<DefaultMessageModel>();
+  @Input() set project(p: ProjetoModel) {
+    if (!p) {
+      return;
+    }
 
+    this.projectId_ = p.id;
+    this.project_ = p;
+    this.participants = new Array<InspetorModel>();
+    this.participants.push(p.owner);
+
+    if (p.participants) {
+      this.participants = this.participants.concat(p.participants);
+    }
+
+    this.messages = new Array<DefaultMessageModel>();
     clearInterval(this.scrollerInterval);
 
+    this.participantOnline(this.globals.user.username);
     this.unsubscribe();
     this.init();
+  }
+
+  get project() {
+    return this.project_;
   }
 
   constructor(private stomp: StompService, private globals: GlobalsVar) {
@@ -90,7 +109,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private subscriber() {
     this.stomp.startConnect().then(() => {
 
-      this.confirmationSubscription = this.stomp.subscribe('/confirmation/' + this.projectId_ + '/' + this.globals.user.id.toString(),
+      this.confirmationSubscription = this.stomp.subscribe('/confirmation/' + this.projectId_ + '/' + this.globals.user.username,
         this.onConfirmationEvent.bind(this),
         this.generateHeader());
 
@@ -119,9 +138,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   private sendConfirmation(data: DefaultMessageModel) {
     let aux = new VisualizedMessage();
     aux.messageId = data.id;
-    aux.user = this.globals.user.id.toString();
+    aux.user = this.globals.user.username;
 
-    this.stomp.send('/app/confirm/' + this.projectId_ + '/' + data.from, aux, this.generateHeader());
+    this.stomp.send('/app/confirm/' + this.projectId_ + '/' + data.name, aux, this.generateHeader());
   }
 
   private sendRegistration() {
@@ -137,11 +156,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.messages.push(data);
 
     if (data.from !== this.globals.user.id.toString()) {
-    this.sendConfirmation(data);
+      this.sendConfirmation(data);
     }
   }
 
   private onConfirmationEvent(message: VisualizedMessage) {
+    if (message.type === 'REGISTERED') {
+      this.participantOnline(message.user);
+
+      return;
+    }
+
     this.messages.forEach(m => {
       if (m.id === message.messageId) {
         m.visualized = true;
@@ -151,18 +176,31 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  private sendRegistered(user: string) {
+    let aux = new VisualizedMessage();
+    aux.user = this.globals.user.username;
+    aux.type = 'REGISTERED';
+
+    this.stomp.send('/app/confirm/' + this.projectId_ + '/' + user, aux, this.generateHeader());
+  }
+
   private onRegisteredEvent(message: RegisteredMessage) {
     if (message.user === this.globals.user.username) {
       return;
     }
 
+    this.participantOnline(message.user);
+    this.sendRegistered(message.user);
+  }
+
+  private participantOnline(user: string) {
     for (let p of this.participants) {
-      if (p === message.user) {
+      if (p.user.username === user) {
+        p.online = true;
+
         return;
       }
     }
-
-    this.participants.push(message.user);
   }
 
   private newMessage() {

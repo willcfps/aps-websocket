@@ -6,7 +6,7 @@ export class GlobalsVar {
     user: UsuarioModel = null;
     projects: Array<ProjetosInscritos>;
     session: string;
-    apiUrl = 'http://192.168.0.101:8080/api';
+    apiUrl = 'http://localhost:8080/api';
 }
 
 

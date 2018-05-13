@@ -1,24 +1,22 @@
-import { Http, Response, RequestOptions, Headers, BaseRequestOptions } from '@angular/http';
-import { Injectable } from '@angular/core';
-import { RESTService } from '../rest.service';
 import { UsuarioModel } from '../../model/usuario/usuario.model';
-import { Observable } from 'rxjs/Observable';
 import { DefaultRestMessage } from '../../model/message/rest/default-rest.message';
 import { LoginRestMessage } from '../../model/message/rest/login-rest.message';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { catchError, retry } from 'rxjs/operators';
+import { GlobalsVar } from '../../globals/globals';
 
 @Injectable()
 export class LoginService {
 
     private resource = '/login';
-    constructor(private restService: RESTService) {
+    constructor(private globals: GlobalsVar, private http: HttpClient) {
 
     }
 
-    login(user: UsuarioModel): Observable<LoginRestMessage> {
-        return this.restService.post(this.resource, user, null).map((r: Response) => {
-            let aux = <LoginRestMessage>r.json();
-
-            return aux;
-        }).catch(RESTService.handleError);
+    login(user: UsuarioModel) {
+        let url = this.globals.apiUrl + this.resource;
+        return this.http.post<LoginRestMessage>(url, user);
     }
 }
