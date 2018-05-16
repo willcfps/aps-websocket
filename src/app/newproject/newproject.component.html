@@ -1,3 +1,56 @@
-<p>
-  newproject works!
-</p>
+<div class="app-container-right">
+  <div class="user-container">
+    <h3>Gestão de Projetos</h3>
+    <div class="form-group">
+      <label for="title">Título:</label>
+      <input type="text" class="form-control" id="title" [(ngModel)]="project.title" (change)="onTitleChange()">
+    </div>
+
+    <div class="form-group">
+      <label for="description">Descrição:</label>
+      <input type="text" class="form-control" id="description" [(ngModel)]="project.description">
+    </div>
+
+    <div class="form-group">
+      <label for="owner">Chefe:</label>
+      <input type="text" class="form-control" disabled id="owner" [(ngModel)]="project?.owner.name">
+    </div>
+
+    <div class="form-group">
+      <label for="sel1">Participantes:</label>
+      <select [(ngModel)]="newParticipant" class="form-control" id="sel1" (change)="onNewParticipantClick()">
+        <option [ngValue]="'null'" selected disabled>Selecione</option>
+        <option *ngFor="let i of inspectors" [ngValue]="i">{{i.name}}</option>
+      </select>
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let p of project.participants">{{p.name}}
+          <span class="badge" style="cursor: pointer !important;" (click)="onRemoveClick(p)">X</span>
+        </li>
+      </ul>
+    </div>
+
+    <div style="text-align: right;">
+      <button type="button" class="btn btn-default" (click)="onNovoClick()">Novo</button>
+      <button type="button" class="btn btn-default" (click)="onSalvarClick()">Salvar</button>
+    </div>
+
+    <div class="container">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Descrição</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let p of projects">
+            <tr (click)="onProjectSelect(p)" style="cursor: pointer;">
+              <td>{{p.title}}</td>
+              <td>{{p.description}}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

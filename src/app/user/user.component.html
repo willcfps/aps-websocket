@@ -1,9 +1,9 @@
 <div class="app-container-right">
   <div class="user-container">
-    <h3>Gestão de usuários</h3>
+    <h3>Gestão de Usuários</h3>
     <div class="form-group">
-      <label for="email">Nome:</label>
-      <input type="email" class="form-control" id="email" [(ngModel)]="user.name">
+      <label for="name">Nome:</label>
+      <input type="text" class="form-control" id="name" [(ngModel)]="user.name">
     </div>
 
     <div class="form-group">
@@ -39,7 +39,7 @@
         </thead>
         <tbody>
           <ng-container *ngFor="let insp of users">
-            <tr (click)="onUserSelect(insp)">
+            <tr (click)="onUserSelect(insp)" style="cursor: pointer;">
               <td>{{insp.name}}</td>
               <td>{{insp.user.profile.description}}</td>
             </tr>

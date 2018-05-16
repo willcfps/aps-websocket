@@ -5,7 +5,7 @@ export class ProjetoModel {
     description: string;
     title: string;
 
-    owner: InspetorModel;
+    owner = new InspetorModel();
     participants: Array<InspetorModel>;
 
 }

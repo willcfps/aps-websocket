@@ -9,7 +9,7 @@ import { InspetorModel } from '../../model/inspetor/inspetor.model';
 @Injectable()
 export class UsuarioService {
 
-    private resource = '/user';
+    private resource = '/users';
     constructor(private globals: GlobalsVar, private http: HttpClient) {
 
     }
@@ -36,5 +36,10 @@ export class UsuarioService {
     getProfiles() {
         let url = this.globals.apiUrl + this.resource + '/profiles';
         return this.http.get<ProfileRestMessage>(url);
+    }
+
+    getInspectorByIdUser(id: number) {
+        let url = this.globals.apiUrl + this.resource + '/user?id=' + id;
+        return this.http.get<UserRestMessage>(url);
     }
 }

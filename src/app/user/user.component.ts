@@ -138,7 +138,7 @@ export class UserComponent implements OnInit {
 
   onSalvarClick() {
     if (!this.validate()) {
-      this.showToastrMessage(ToastrMensagem.SEVERIDADE.WARNING, 'Preencha todos os campos.');
+      return;
     }
 
    if (this.user.id) {
